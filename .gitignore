@@ -1,0 +1,6 @@
+headline-*.png
+navbar-mobile.png
+assets/favicon-source.png
+node_modules/
+.DS_Store
+Thumbs.db
