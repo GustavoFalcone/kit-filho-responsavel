@@ -374,6 +374,50 @@ let conversionLastFocus;
 let exitOfferTrigger = "";
 let allowHistoryExit = false;
 let exitIntentCooldownUntil = 0;
+let checkoutNavigationStarted = false;
+
+const metaPixelId = "2526573931112486";
+const checkoutTrackingData = {
+  basic: { value: 10, contentName: "Plano Básico" },
+  pro: { value: 27.9, contentName: "Plano Pro" },
+  "pro-discount": { value: 17.9, contentName: "Plano Pro - Oferta Especial" }
+};
+
+const startCheckout = (event, link) => {
+  if (checkoutNavigationStarted) {
+    event.preventDefault();
+    return;
+  }
+
+  checkoutNavigationStarted = true;
+  event.preventDefault();
+
+  const checkoutId = link.dataset.checkout;
+  const trackingData = checkoutTrackingData[checkoutId];
+  const checkoutUrl = link.href;
+
+  if (typeof window.fbq === "function") {
+    window.fbq(
+      "trackSingle",
+      metaPixelId,
+      "InitiateCheckout",
+      {
+        content_ids: [checkoutId],
+        content_name: trackingData?.contentName || "Método Filho Responsável",
+        content_type: "product",
+        currency: "BRL",
+        value: trackingData?.value || 0
+      },
+      {
+        eventID: `ic-${checkoutId}-${Date.now()}`
+      }
+    );
+  }
+
+  window.setTimeout(() => {
+    window.location.assign(checkoutUrl);
+  }, 350);
+};
 
 const setConversionOverlayState = (isOpen) => {
   document.body.classList.toggle("conversion-overlay-open", isOpen);
@@ -430,7 +474,8 @@ backOfferCloseButton?.addEventListener("click", () => {
 conversionCheckoutLinks.forEach((link) => {
   if (link === basicPlanTrigger) return;
 
-  link.addEventListener("click", () => {
+  link.addEventListener("click", (event) => {
+    startCheckout(event, link);
     allowHistoryExit = true;
     closeUpgradeModal();
     closeBackOffer();
