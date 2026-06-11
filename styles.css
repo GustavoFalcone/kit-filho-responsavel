@@ -723,22 +723,45 @@ html.reveal-ready .reveal[data-reveal="zoom"] {
 
 .vsl-player-shell:fullscreen,
 .vsl-player-shell.is-ios-fullscreen {
-  width: 100vw;
-  height: 100vh;
-  max-width: none;
-  aspect-ratio: auto;
-  border-radius: 0;
+  width: 100vw !important;
+  width: 100dvw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  min-width: 100vw;
+  min-width: 100dvw;
+  min-height: 100vh;
+  min-height: 100dvh;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  aspect-ratio: auto !important;
   background: #000;
+  box-shadow: none !important;
+  transform: none !important;
+  animation: none !important;
 }
 
 .vsl-player-shell.is-ios-fullscreen {
-  position: fixed;
-  inset: 0;
-  z-index: 10000;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483647;
+}
+
+html.vsl-pseudo-fullscreen,
+body.vsl-pseudo-fullscreen {
+  width: 100%;
+  height: 100%;
+  overflow: hidden !important;
+  overscroll-behavior: none;
 }
 
 body.vsl-pseudo-fullscreen {
-  overflow: hidden;
+  position: fixed;
+  right: 0;
+  left: 0;
 }
 
 .vsl-player-shell:fullscreen .vsl-fullscreen-enter,
@@ -753,16 +776,34 @@ body.vsl-pseudo-fullscreen {
 
 .vsl-player-shell:fullscreen .vsl-video,
 .vsl-player-shell.is-ios-fullscreen .vsl-video {
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: contain !important;
+  object-position: center center !important;
+  background: #000;
+}
+
+.vsl-player-shell:fullscreen .vsl-surface-control,
+.vsl-player-shell.is-ios-fullscreen .vsl-surface-control {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .vsl-player-shell:fullscreen .vsl-controls,
 .vsl-player-shell.is-ios-fullscreen .vsl-controls {
-  padding-right: max(20px, env(safe-area-inset-right));
-  padding-bottom: max(18px, env(safe-area-inset-bottom));
-  padding-left: max(20px, env(safe-area-inset-left));
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding-right: max(18px, env(safe-area-inset-right));
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+  padding-left: max(18px, env(safe-area-inset-left));
 }
 
 .vsl-loading {

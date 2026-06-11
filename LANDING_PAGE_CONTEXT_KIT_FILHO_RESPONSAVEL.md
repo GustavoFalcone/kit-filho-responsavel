@@ -372,7 +372,9 @@ Implementação:
 - interação direta com o elemento de vídeo bloqueada;
 - interface própria com play/pausa e tela cheia;
 - tela cheia aplicada ao contêiner customizado;
-- fallback de pseudo-fullscreen para Safari/iPhone;
+- mobile usa pseudo-fullscreen com `100dvh` para evitar bugs da API nativa;
+- ao entrar em tela cheia no mobile, o player é movido temporariamente para o `<body>`, evitando recorte por ancestrais animados da hero;
+- ao sair, o player retorna exatamente à posição original e o scroll é restaurado;
 - thumbnail vertical oficial `1080x1920` (`oar2.jpg`);
 - vídeo e capa preservados sem corte;
 - barra de progresso visual não interativa;
