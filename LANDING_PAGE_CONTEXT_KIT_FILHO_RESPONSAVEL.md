@@ -1203,11 +1203,17 @@ Limitação técnica:
 
 Navegadores não permitem mostrar uma seção personalizada depois que a aba já foi fechada. Por isso, o fluxo cobre o botão voltar e a intenção de saída detectável antes do fechamento.
 
-As URLs reais de checkout ainda não existem no projeto. Os CTAs usam o destino histórico `#topo` e estão identificados com:
+URLs reais de checkout:
 
 ```text
-data-checkout="basic"
-data-checkout="pro-discount"
+Plano Básico - R$ 10,00
+https://zuckpay.com.br/checkout/100-frases-responsaveis-plano-basico
+
+Plano Pro principal - R$ 27,90
+https://zuckpay.com.br/checkout/100-frases-responsaveis-plano-pro
+
+Plano Pro de recuperação - R$ 17,90
+https://zuckpay.com.br/checkout/100-frases-responsaveis-plano-pro-1
 ```
 
-Quando os links forem fornecidos, substituir apenas os respectivos `href`.
+Os CTAs de recuperação continuam identificados com `data-checkout` para controle do fluxo.
