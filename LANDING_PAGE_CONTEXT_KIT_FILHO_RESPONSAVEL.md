@@ -1229,3 +1229,11 @@ https://zuckpay.com.br/checkout/100-frases-responsaveis-plano-pro-1
 ```
 
 Os CTAs de recuperação continuam identificados com `data-checkout` para controle do fluxo.
+
+Todos os links que navegam efetivamente para um checkout usam:
+
+```html
+<a class="go-to-checkout" href="...">
+```
+
+Essa classe existe para o rastreamento da UTMify. O gatilho do Plano Básico na página não possui `go-to-checkout`, pois ele abre o popup antes da navegação; o link “Prefiro continuar com o Plano Básico” possui a classe porque leva diretamente ao checkout.
