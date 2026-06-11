@@ -1169,6 +1169,18 @@ Estado:
 
 Este arquivo deve ser atualizado sempre que houver alteração estrutural, mudança de oferta, troca de preço, mudança de repositório, domínio ou integração de checkout.
 
+## 39. Rastreamento e pixels
+
+Meta Pixel instalado no `<head>`:
+
+```text
+Pixel ID: 2526573931112486
+Evento inicial: PageView
+Script: https://connect.facebook.net/en_US/fbevents.js
+```
+
+O fallback `<noscript>` do snippet oficial também está presente. Outros pixels, UTMs e eventos de conversão ainda devem ser adicionados conforme forem fornecidos.
+
 ## 38. Popup de upgrade e back redirect
 
 O botão do Plano Básico abre um popup de upgrade oferecendo o Plano Pro por `R$ 17,90`.
