@@ -540,7 +540,12 @@
                 decoding="async"
               >
             </figure>
-            <a href="#topo" class="button plan-button plan-button-basic">Quero começar pelo Básico</a>
+            <a
+              href="#topo"
+              class="button plan-button plan-button-basic"
+              id="basic-plan-trigger"
+              data-checkout="basic"
+            >Quero começar pelo Básico</a>
           </article>
 
           <article class="offer-card offer-card-featured">
@@ -672,6 +677,100 @@
       <p>Método Filho Responsável • Respostas prontas, limites claros e menos culpa.</p>
     </div>
   </footer>
+
+  <!-- POPUP DE UPGRADE DO PLANO BÁSICO -->
+  <div class="upgrade-modal" id="upgrade-modal" hidden>
+    <div class="upgrade-modal-backdrop" data-close-upgrade></div>
+    <section class="upgrade-dialog" role="dialog" aria-modal="true" aria-labelledby="upgrade-title" aria-describedby="upgrade-description">
+      <button class="conversion-close" type="button" data-close-upgrade aria-label="Fechar oferta">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+          <path d="m6 6 12 12M18 6 6 18"></path>
+        </svg>
+      </button>
+
+      <div class="upgrade-dialog-top">
+        <span class="conversion-kicker">Antes de escolher o Básico</span>
+        <h2 id="upgrade-title">Leve o Plano Pro por apenas <strong>R$ 7,90 a mais</strong></h2>
+        <p id="upgrade-description">Você já decidiu parar de improvisar. Por R$ 17,90, leve também as ferramentas que ajudam a decidir, organizar limites e manter sua resposta quando a pressão aparecer.</p>
+      </div>
+
+      <div class="upgrade-comparison">
+        <div class="upgrade-price">
+          <span class="upgrade-price-label">Condição desta tela</span>
+          <div><small>R$</small><strong>17</strong><sup>,90</sup></div>
+          <span>pagamento único • acesso vitalício</span>
+        </div>
+        <ul class="conversion-benefits">
+          <li>Todo o conteúdo do Plano Básico</li>
+          <li>Diagnóstico personalizado</li>
+          <li>Checklist, contrato e mapa dos limites</li>
+          <li>Simulador “Ajudo ou digo não?”</li>
+          <li>Suporte VIP prioritário e atualizações</li>
+        </ul>
+      </div>
+
+      <div class="conversion-actions">
+        <a href="#topo" class="conversion-primary" data-checkout="pro-discount">
+          Quero o Plano Pro por R$ 17,90
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+            <path d="M5 12h14"></path>
+            <path d="m14 7 5 5-5 5"></path>
+          </svg>
+        </a>
+        <a href="#topo" class="conversion-secondary" data-checkout="basic">Prefiro continuar com o Plano Básico</a>
+      </div>
+    </section>
+  </div>
+
+  <!-- BACK REDIRECT: exibido somente após intenção de saída -->
+  <section class="back-offer" id="back-offer" hidden aria-labelledby="back-offer-title">
+    <div class="back-offer-scroll">
+      <button class="conversion-close back-offer-close" type="button" data-close-back-offer aria-label="Voltar para a página">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+          <path d="m6 6 12 12M18 6 6 18"></path>
+        </svg>
+      </button>
+
+      <div class="back-offer-layout">
+        <div class="back-offer-copy">
+          <span class="conversion-kicker">Espere antes de sair</span>
+          <h2 id="back-offer-title">Você pode levar o kit completo por <strong>R$ 17,90</strong></h2>
+          <p>Em vez de voltar para a próxima conversa sem saber o que dizer, leve as frases prontas e as ferramentas para decidir quando ajudar, negar ou manter um limite.</p>
+
+          <div class="back-offer-savings">
+            <span>Plano Pro na página: <del>R$ 27,90</del></span>
+            <strong>Você economiza R$ 10 agora</strong>
+          </div>
+
+          <ul class="conversion-benefits back-offer-benefits">
+            <li>+100 frases prontas para situações reais</li>
+            <li>Diagnóstico e simulador de decisão</li>
+            <li>Checklist de 30 dias e mapa dos limites</li>
+            <li>Contrato familiar editável</li>
+            <li>Acesso vitalício e suporte prioritário</li>
+          </ul>
+        </div>
+
+        <aside class="back-offer-pitch" aria-label="Oferta especial do Plano Pro">
+          <span class="back-offer-badge">Condição de saída</span>
+          <img
+            src="https://i.postimg.cc/4xPMMQrP/Chat-GPT-Image-6-de-jun-de-2026-15-47-48-removebg-preview.png"
+            alt="Materiais incluídos no Plano Pro"
+            loading="lazy"
+            decoding="async"
+          >
+          <div class="back-offer-price">
+            <del>R$ 27,90</del>
+            <div><small>R$</small><strong>17</strong><sup>,90</sup></div>
+            <span>pagamento único</span>
+          </div>
+          <a href="#topo" class="conversion-primary" data-checkout="pro-discount">Quero o Plano Pro por R$ 17,90</a>
+          <button class="back-offer-exit" type="button" data-exit-site>Não, quero sair mesmo</button>
+          <p class="back-offer-note">Acesso imediato • Garantia de 7 dias</p>
+        </aside>
+      </div>
+    </div>
+  </section>
 
   <!-- BOTÃO FLUTUANTE DO WHATSAPP -->
   <a

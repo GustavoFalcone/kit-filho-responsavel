@@ -1168,3 +1168,44 @@ Estado:
 - documentação canônica criada.
 
 Este arquivo deve ser atualizado sempre que houver alteração estrutural, mudança de oferta, troca de preço, mudança de repositório, domínio ou integração de checkout.
+
+## 38. Popup de upgrade e back redirect
+
+O botão do Plano Básico abre um popup de upgrade oferecendo o Plano Pro por `R$ 17,90`.
+
+Copy central:
+
+```text
+Leve o Plano Pro por apenas R$ 7,90 a mais
+```
+
+O popup possui:
+
+- CTA principal para o Pro com desconto;
+- lista curta do valor adicional;
+- botão explícito `Prefiro continuar com o Plano Básico`;
+- fechamento por botão, backdrop e tecla Escape;
+- layout em bottom sheet no mobile.
+
+Também existe um back redirect em tela cheia:
+
+- aparece ao pressionar voltar no navegador;
+- no desktop, também pode aparecer por intenção de saída no topo da janela;
+- aparece no máximo uma vez por sessão;
+- não aparece durante navegação interna normal;
+- possui CTA do Plano Pro por `R$ 17,90`;
+- possui botão honesto `Não, quero sair mesmo`;
+- libera a saída do navegador quando a oferta é recusada.
+
+Limitação técnica:
+
+Navegadores não permitem mostrar uma seção personalizada depois que a aba já foi fechada. Por isso, o fluxo cobre o botão voltar e a intenção de saída detectável antes do fechamento.
+
+As URLs reais de checkout ainda não existem no projeto. Os CTAs usam o destino histórico `#topo` e estão identificados com:
+
+```text
+data-checkout="basic"
+data-checkout="pro-discount"
+```
+
+Quando os links forem fornecidos, substituir apenas os respectivos `href`.

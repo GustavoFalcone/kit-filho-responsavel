@@ -339,6 +339,8 @@ if (vslShell && vslVideo && vslSurfaceControl && vslProgressBar) {
 }
 
 document.querySelectorAll('a[href^="#"]').forEach((link) => {
+  if (link.matches("[data-checkout]")) return;
+
   link.addEventListener("click", (event) => {
     const target = document.querySelector(link.getAttribute("href"));
 
@@ -359,4 +361,170 @@ document.querySelectorAll("details").forEach((item) => {
       }
     });
   });
+});
+
+const basicPlanTrigger = document.querySelector("#basic-plan-trigger");
+const upgradeModal = document.querySelector("#upgrade-modal");
+const backOffer = document.querySelector("#back-offer");
+const upgradeCloseButtons = document.querySelectorAll("[data-close-upgrade]");
+const backOfferCloseButton = document.querySelector("[data-close-back-offer]");
+const exitSiteButton = document.querySelector("[data-exit-site]");
+const conversionCheckoutLinks = document.querySelectorAll("[data-checkout]");
+let conversionLastFocus;
+let exitOfferTrigger = "";
+let allowHistoryExit = false;
+
+const hasShownBackOffer = () => {
+  try {
+    return sessionStorage.getItem("filhoResponsavelBackOfferShown") === "true";
+  } catch {
+    return false;
+  }
+};
+
+const markBackOfferAsShown = () => {
+  try {
+    sessionStorage.setItem("filhoResponsavelBackOfferShown", "true");
+  } catch {
+    // The flow still works when session storage is unavailable.
+  }
+};
+
+const setConversionOverlayState = (isOpen) => {
+  document.body.classList.toggle("conversion-overlay-open", isOpen);
+};
+
+const openUpgradeModal = () => {
+  if (!upgradeModal) return;
+
+  conversionLastFocus = document.activeElement;
+  upgradeModal.hidden = false;
+  setConversionOverlayState(true);
+  upgradeModal.querySelector(".conversion-primary")?.focus({ preventScroll: true });
+};
+
+const closeUpgradeModal = () => {
+  if (!upgradeModal || upgradeModal.hidden) return;
+
+  upgradeModal.hidden = true;
+  setConversionOverlayState(false);
+  conversionLastFocus?.focus?.();
+};
+
+const openBackOffer = (trigger) => {
+  if (!backOffer || !backOffer.hidden) return;
+
+  exitOfferTrigger = trigger;
+  markBackOfferAsShown();
+  backOffer.hidden = false;
+  setConversionOverlayState(true);
+  backOffer.querySelector(".conversion-primary")?.focus({ preventScroll: true });
+};
+
+const closeBackOffer = () => {
+  if (!backOffer || backOffer.hidden) return;
+
+  backOffer.hidden = true;
+  setConversionOverlayState(false);
+};
+
+basicPlanTrigger?.addEventListener("click", (event) => {
+  event.preventDefault();
+  openUpgradeModal();
+});
+
+upgradeCloseButtons.forEach((button) => {
+  button.addEventListener("click", closeUpgradeModal);
+});
+
+backOfferCloseButton?.addEventListener("click", () => {
+  closeBackOffer();
+  exitOfferTrigger = "";
+});
+
+conversionCheckoutLinks.forEach((link) => {
+  if (link === basicPlanTrigger) return;
+
+  link.addEventListener("click", () => {
+    allowHistoryExit = true;
+    closeUpgradeModal();
+    closeBackOffer();
+  });
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape") return;
+
+  if (upgradeModal && !upgradeModal.hidden) {
+    closeUpgradeModal();
+  } else if (backOffer && !backOffer.hidden) {
+    closeBackOffer();
+    exitOfferTrigger = "";
+  }
+});
+
+if (backOffer && window.history?.pushState) {
+  history.replaceState({ landingBase: true }, "", window.location.href);
+  history.pushState({ exitGuard: true }, "", window.location.href);
+
+  window.addEventListener("popstate", () => {
+    if (allowHistoryExit) {
+      allowHistoryExit = false;
+      history.back();
+      return;
+    }
+
+    if (hasShownBackOffer()) {
+      history.back();
+      return;
+    }
+
+    openBackOffer("history");
+    history.pushState({ exitGuard: true }, "", window.location.href);
+  });
+
+  document.addEventListener("mouseout", (event) => {
+    const isDesktopExitIntent =
+      event.clientY <= 0 &&
+      !event.relatedTarget &&
+      window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+    if (
+      !isDesktopExitIntent ||
+      hasShownBackOffer() ||
+      (upgradeModal && !upgradeModal.hidden)
+    ) {
+      return;
+    }
+
+    openBackOffer("exit-intent");
+  });
+}
+
+exitSiteButton?.addEventListener("click", () => {
+  const trigger = exitOfferTrigger;
+  closeBackOffer();
+  exitOfferTrigger = "";
+
+  if (trigger === "history") {
+    allowHistoryExit = true;
+    history.back();
+    return;
+  }
+
+  if (document.referrer) {
+    try {
+      const referrerUrl = new URL(document.referrer);
+
+      if (referrerUrl.origin !== window.location.origin) {
+        window.location.href = referrerUrl.href;
+        return;
+      }
+    } catch {
+      // Fall through to browser history.
+    }
+  }
+
+  allowHistoryExit = true;
+  history.back();
 });
