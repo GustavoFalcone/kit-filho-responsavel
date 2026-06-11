@@ -84,10 +84,33 @@
           </div>
           <div class="phone-mockup" aria-label="Mockup de iPhone com vídeo vertical 9:16">
             <div class="phone-notch"></div>
-            <button class="video-placeholder" type="button" aria-label="Reproduzir vídeo de apresentação">
-              <span class="play-button"></span>
-              <span class="video-time">VSL • 9:16</span>
-            </button>
+            <div class="vsl-player-shell" id="vsl-player-shell">
+              <div class="vsl-youtube-player" id="vsl-youtube-player" aria-hidden="true"></div>
+              <img
+                class="vsl-poster"
+                src="https://i.ytimg.com/vi/O7LB8TmSFgc/oar2.jpg"
+                alt=""
+                aria-hidden="true"
+                onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/O7LB8TmSFgc/maxresdefault.jpg';"
+              >
+              <button class="vsl-surface-control" type="button" aria-label="Reproduzir vídeo">
+                <span class="vsl-play-icon" aria-hidden="true"></span>
+              </button>
+              <div class="vsl-controls" aria-label="Controles do vídeo">
+                <div class="vsl-smart-progress" aria-hidden="true">
+                  <span id="vsl-smart-progress-bar"></span>
+                </div>
+                <button class="vsl-fullscreen-button" type="button" aria-label="Entrar em tela cheia">
+                  <svg class="vsl-fullscreen-enter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"></path>
+                  </svg>
+                  <svg class="vsl-fullscreen-exit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M8 3v5H3M16 3v5h5M8 21v-5H3M16 21v-5h5"></path>
+                  </svg>
+                </button>
+              </div>
+              <div class="vsl-loading" aria-hidden="true"><span></span></div>
+            </div>
           </div>
           <div class="hero-action-row">
             <a href="#oferta" class="button button-primary hero-cta">Quero saber o que falar</a>

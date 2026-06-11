@@ -354,12 +354,42 @@ A VSL:
 - fica na hero;
 - usa mockup de iPhone;
 - possui proporção vertical `9:16`;
-- foi pensada para vídeo `1080x1920`;
-- não possui vídeo real;
+- usa o vídeo `O7LB8TmSFgc`, publicado originalmente como YouTube Short;
 - não deve voltar para `16:9`;
 - não deve receber um card externo desnecessário.
 
-O botão atual apenas ativa um estado visual. Quando houver vídeo real, preservar o enquadramento mobile e evitar autoplay com áudio.
+URL de origem:
+
+```text
+https://youtube.com/shorts/O7LB8TmSFgc
+```
+
+Implementação:
+
+- YouTube IFrame API;
+- host `youtube-nocookie.com`;
+- controles nativos ocultos;
+- teclado do player desativado;
+- interação direta com o iframe bloqueada;
+- interface própria com play/pausa e tela cheia;
+- tela cheia aplicada ao contêiner customizado;
+- fallback de pseudo-fullscreen para Safari/iPhone;
+- thumbnail vertical oficial `1080x1920` (`oar2.jpg`);
+- vídeo e capa preservados sem corte;
+- barra de progresso visual não interativa;
+- nenhuma opção de velocidade ou busca manual.
+
+A barra inteligente usa o progresso real do vídeo e a fórmula:
+
+```text
+progresso exibido = progresso real + 0,25 × seno(π × progresso real)
+```
+
+Isso faz a barra avançar mais rapidamente no início e desacelerar no final. Ela é limitada a `99,5%` enquanto o vídeo não termina e só chega a `100%` no estado `ENDED`.
+
+Limitação da plataforma:
+
+O YouTube controla internamente o conteúdo do iframe e pode alterar comportamentos futuros. A interface customizada bloqueia os controles e overlays comuns observados atualmente, mas não deve ser descrita como um player VTurb real.
 
 ## 12. Topo e navegação
 
@@ -1126,6 +1156,7 @@ Data desta consolidação:
 Estado:
 
 - landing page funcional;
+- VSL real integrada ao mockup com player customizado;
 - GitHub configurado no repositório correto;
 - branch `main`;
 - produção online;
