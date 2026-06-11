@@ -24,6 +24,28 @@
   </script>
   <!-- End UTMify Pixel Code -->
 
+  <!-- Impede somente os eventos automáticos inferidos pela Meta.
+       O PageView e o InitiateCheckout continuam sob responsabilidade da UTMify. -->
+  <script>
+    (function disableMetaAutomaticEvents() {
+      var metaPixelId = "2526573931112486";
+      var attempts = 0;
+      var timer = window.setInterval(function () {
+        attempts += 1;
+
+        if (typeof window.fbq === "function") {
+          window.fbq("set", "autoConfig", false, metaPixelId);
+          window.clearInterval(timer);
+          return;
+        }
+
+        if (attempts >= 200) {
+          window.clearInterval(timer);
+        }
+      }, 50);
+    })();
+  </script>
+
   <!-- UTMify UTM Tracking Code -->
   <script
     src="https://cdn.utmify.com.br/scripts/utms/latest.js"
