@@ -1,4 +1,14 @@
-# Contexto Completo do Projeto - Metodo Filho Responsavel
+# Contexto Histórico do Projeto - Método Filho Responsável
+
+> **Atenção:** este arquivo contém registros históricos e partes desatualizadas. O documento canônico e exclusivo desta landing page agora é:
+>
+> `LANDING_PAGE_CONTEXT_KIT_FILHO_RESPONSAVEL.md`
+>
+> Identificador do projeto: `FR-LP-KIT-2026`
+>
+> Repositório: `https://github.com/GustavoFalcone/kit-filho-responsavel`
+>
+> Leia o documento canônico antes de realizar qualquer alteração.
 
 Este documento existe para permitir que outro Codex, desenvolvedor ou designer continue o projeto sem depender do historico da conversa original.
 
