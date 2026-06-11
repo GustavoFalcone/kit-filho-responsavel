@@ -339,7 +339,7 @@ if (vslShell && vslVideo && vslSurfaceControl && vslProgressBar) {
 }
 
 document.querySelectorAll('a[href^="#"]').forEach((link) => {
-  if (link.matches("[data-checkout]")) return;
+  if (link.matches("[data-checkout], #basic-plan-trigger")) return;
 
   link.addEventListener("click", (event) => {
     const target = document.querySelector(link.getAttribute("href"));
