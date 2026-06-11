@@ -373,22 +373,7 @@ const conversionCheckoutLinks = document.querySelectorAll("[data-checkout]");
 let conversionLastFocus;
 let exitOfferTrigger = "";
 let allowHistoryExit = false;
-
-const hasShownBackOffer = () => {
-  try {
-    return sessionStorage.getItem("filhoResponsavelBackOfferShown") === "true";
-  } catch {
-    return false;
-  }
-};
-
-const markBackOfferAsShown = () => {
-  try {
-    sessionStorage.setItem("filhoResponsavelBackOfferShown", "true");
-  } catch {
-    // The flow still works when session storage is unavailable.
-  }
-};
+let exitIntentCooldownUntil = 0;
 
 const setConversionOverlayState = (isOpen) => {
   document.body.classList.toggle("conversion-overlay-open", isOpen);
@@ -415,7 +400,6 @@ const openBackOffer = (trigger) => {
   if (!backOffer || !backOffer.hidden) return;
 
   exitOfferTrigger = trigger;
-  markBackOfferAsShown();
   backOffer.hidden = false;
   setConversionOverlayState(true);
   backOffer.querySelector(".conversion-primary")?.focus({ preventScroll: true });
@@ -426,6 +410,7 @@ const closeBackOffer = () => {
 
   backOffer.hidden = true;
   setConversionOverlayState(false);
+  exitIntentCooldownUntil = Date.now() + 1500;
 };
 
 basicPlanTrigger?.addEventListener("click", (event) => {
@@ -474,11 +459,6 @@ if (backOffer && window.history?.pushState) {
       return;
     }
 
-    if (hasShownBackOffer()) {
-      history.back();
-      return;
-    }
-
     openBackOffer("history");
     history.pushState({ exitGuard: true }, "", window.location.href);
   });
@@ -491,7 +471,8 @@ if (backOffer && window.history?.pushState) {
 
     if (
       !isDesktopExitIntent ||
-      hasShownBackOffer() ||
+      Date.now() < exitIntentCooldownUntil ||
+      (backOffer && !backOffer.hidden) ||
       (upgradeModal && !upgradeModal.hidden)
     ) {
       return;

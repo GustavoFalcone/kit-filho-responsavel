@@ -1191,11 +1191,13 @@ Também existe um back redirect em tela cheia:
 
 - aparece ao pressionar voltar no navegador;
 - no desktop, também pode aparecer por intenção de saída no topo da janela;
-- aparece no máximo uma vez por sessão;
+- aparece a cada nova tentativa real de voltar, enquanto a pessoa permanecer na landing;
 - não aparece durante navegação interna normal;
 - possui CTA do Plano Pro por `R$ 17,90`;
 - possui botão honesto `Não, quero sair mesmo`;
 - libera a saída do navegador quando a oferta é recusada.
+
+O back redirect não usa mais `sessionStorage`. A trava persistente foi removida porque podia impedir a oferta de aparecer em tentativas reais posteriores de saída.
 
 Limitação técnica:
 
