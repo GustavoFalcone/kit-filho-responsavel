@@ -375,27 +375,6 @@ let exitOfferTrigger = "";
 let allowHistoryExit = false;
 let exitIntentCooldownUntil = 0;
 
-const checkoutTrackingData = {
-  basic: { value: 10, contentName: "Plano Básico" },
-  pro: { value: 27.9, contentName: "Plano Pro" },
-  "pro-discount": { value: 17.9, contentName: "Plano Pro - Oferta Especial" }
-};
-
-const trackInitiateCheckout = (link) => {
-  if (typeof window.fbq !== "function" || !link.classList.contains("go-to-checkout")) return;
-
-  const checkoutId = link.dataset.checkout;
-  const trackingData = checkoutTrackingData[checkoutId];
-
-  window.fbq("track", "InitiateCheckout", {
-    content_ids: [checkoutId],
-    content_name: trackingData?.contentName || "Método Filho Responsável",
-    content_type: "product",
-    currency: "BRL",
-    value: trackingData?.value || 0
-  });
-};
-
 const setConversionOverlayState = (isOpen) => {
   document.body.classList.toggle("conversion-overlay-open", isOpen);
 };
@@ -452,7 +431,6 @@ conversionCheckoutLinks.forEach((link) => {
   if (link === basicPlanTrigger) return;
 
   link.addEventListener("click", () => {
-    trackInitiateCheckout(link);
     allowHistoryExit = true;
     closeUpgradeModal();
     closeBackOffer();
