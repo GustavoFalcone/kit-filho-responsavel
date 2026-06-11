@@ -586,9 +586,7 @@ html.reveal-ready .reveal[data-reveal="zoom"] {
   isolation: isolate;
 }
 
-.vsl-youtube-player,
-.vsl-youtube-player iframe,
-.vsl-poster,
+.vsl-video,
 .vsl-surface-control {
   position: absolute;
   inset: 0;
@@ -596,34 +594,12 @@ html.reveal-ready .reveal[data-reveal="zoom"] {
   height: 100%;
 }
 
-.vsl-youtube-player {
+.vsl-video {
   z-index: 1;
-  overflow: hidden;
-  background: #050707;
-  opacity: 0;
-  transition: opacity 220ms ease;
-}
-
-.vsl-youtube-player iframe {
-  border: 0;
-  pointer-events: none;
-}
-
-.vsl-poster {
-  z-index: 2;
   display: block;
   object-fit: contain;
   background: #050707;
-  transition: opacity 220ms ease, visibility 220ms ease;
-}
-
-.vsl-player-shell.is-started .vsl-youtube-player {
-  opacity: 1;
-}
-
-.vsl-player-shell.is-started .vsl-poster {
-  visibility: hidden;
-  opacity: 0;
+  pointer-events: none;
 }
 
 .vsl-surface-control {
@@ -672,18 +648,7 @@ html.reveal-ready .reveal[data-reveal="zoom"] {
 
 .vsl-player-shell.is-playing .vsl-surface-control:hover .vsl-play-icon,
 .vsl-player-shell.is-playing .vsl-surface-control:focus-visible .vsl-play-icon {
-  opacity: 0.92;
-}
-
-.vsl-player-shell.is-playing .vsl-play-icon::before,
-.vsl-player-shell.is-playing .vsl-play-icon::after {
-  content: "";
-  width: 8px;
-  height: 31px;
-  margin: 0 4px;
-  border: 0;
-  border-radius: 3px;
-  background: var(--primary);
+  opacity: 0;
 }
 
 .vsl-controls {
@@ -693,19 +658,22 @@ html.reveal-ready .reveal[data-reveal="zoom"] {
   display: flex;
   align-items: flex-end;
   gap: 12px;
-  padding: 26px 16px 14px;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.68), transparent);
+  padding: 30px 15px 13px;
+  background: linear-gradient(to top, rgba(5, 7, 7, 0.96) 0, rgba(5, 7, 7, 0.72) 52%, transparent 100%);
   pointer-events: none;
 }
 
 .vsl-smart-progress {
   flex: 1;
-  height: 6px;
-  margin-bottom: 9px;
+  height: 11px;
+  margin-bottom: 8px;
   overflow: hidden;
   border-radius: 999px;
-  background: rgba(248, 245, 239, 0.3);
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(248, 245, 239, 0.46);
+  background: rgba(248, 245, 239, 0.34);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.34),
+    inset 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .vsl-smart-progress span {
@@ -713,8 +681,10 @@ html.reveal-ready .reveal[data-reveal="zoom"] {
   width: 0;
   height: 100%;
   border-radius: inherit;
-  background: var(--accent);
-  box-shadow: 0 0 12px rgba(184, 134, 11, 0.55);
+  background: linear-gradient(90deg, #d49a0b, #f1c84b);
+  box-shadow:
+    0 0 14px rgba(241, 200, 75, 0.72),
+    inset 0 1px 0 rgba(255, 255, 255, 0.34);
   transition: width 240ms linear;
 }
 
@@ -781,15 +751,18 @@ body.vsl-pseudo-fullscreen {
   display: block;
 }
 
-.vsl-player-shell:fullscreen .vsl-youtube-player,
-.vsl-player-shell:fullscreen .vsl-youtube-player iframe,
-.vsl-player-shell.is-ios-fullscreen .vsl-youtube-player,
-.vsl-player-shell.is-ios-fullscreen .vsl-youtube-player iframe,
-.vsl-player-shell:fullscreen #vsl-youtube-player,
-.vsl-player-shell.is-ios-fullscreen #vsl-youtube-player {
+.vsl-player-shell:fullscreen .vsl-video,
+.vsl-player-shell.is-ios-fullscreen .vsl-video {
   inset: 0;
   width: 100%;
   height: 100%;
+}
+
+.vsl-player-shell:fullscreen .vsl-controls,
+.vsl-player-shell.is-ios-fullscreen .vsl-controls {
+  padding-right: max(20px, env(safe-area-inset-right));
+  padding-bottom: max(18px, env(safe-area-inset-bottom));
+  padding-left: max(20px, env(safe-area-inset-left));
 }
 
 .vsl-loading {

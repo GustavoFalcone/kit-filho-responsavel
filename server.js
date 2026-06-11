@@ -14,7 +14,8 @@ const contentTypes = {
   ".jpg": "image/jpeg",
   ".jpeg": "image/jpeg",
   ".webp": "image/webp",
-  ".svg": "image/svg+xml"
+  ".svg": "image/svg+xml",
+  ".mp4": "video/mp4"
 };
 
 const server = http.createServer((req, res) => {
@@ -25,6 +26,55 @@ const server = http.createServer((req, res) => {
   if (!filePath.startsWith(root)) {
     res.writeHead(403);
     res.end("Forbidden");
+    return;
+  }
+
+  if (path.extname(filePath).toLowerCase() === ".mp4") {
+    fs.stat(filePath, (statError, stats) => {
+      if (statError) {
+        res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
+        res.end("Not found");
+        return;
+      }
+
+      const range = req.headers.range;
+      const commonHeaders = {
+        "Accept-Ranges": "bytes",
+        "Content-Type": "video/mp4"
+      };
+
+      if (!range) {
+        res.writeHead(200, {
+          ...commonHeaders,
+          "Content-Length": stats.size
+        });
+
+        if (req.method === "HEAD") {
+          res.end();
+          return;
+        }
+
+        fs.createReadStream(filePath).pipe(res);
+        return;
+      }
+
+      const [startText, endText] = range.replace("bytes=", "").split("-");
+      const start = Number(startText);
+      const end = endText ? Number(endText) : stats.size - 1;
+
+      if (!Number.isFinite(start) || !Number.isFinite(end) || start < 0 || end >= stats.size || start > end) {
+        res.writeHead(416, { "Content-Range": `bytes */${stats.size}` });
+        res.end();
+        return;
+      }
+
+      res.writeHead(206, {
+        ...commonHeaders,
+        "Content-Length": end - start + 1,
+        "Content-Range": `bytes ${start}-${end}/${stats.size}`
+      });
+      fs.createReadStream(filePath, { start, end }).pipe(res);
+    });
     return;
   }
 

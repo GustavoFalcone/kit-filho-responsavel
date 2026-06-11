@@ -1,4 +1,5 @@
 const vslShell = document.querySelector("#vsl-player-shell");
+const vslVideo = document.querySelector("#vsl-video");
 const vslSurfaceControl = document.querySelector(".vsl-surface-control");
 const vslFullscreenButton = document.querySelector(".vsl-fullscreen-button");
 const vslProgressBar = document.querySelector("#vsl-smart-progress-bar");
@@ -185,36 +186,9 @@ if (countdowns.length) {
   setInterval(updateCountdown, 250);
 }
 
-if (vslShell && vslSurfaceControl && vslProgressBar) {
-  const youtubeVideoId = "O7LB8TmSFgc";
-  let youtubePlayer;
-  let progressTimer;
-  let isPlayerReady = false;
-  let shouldPlayWhenReady = false;
-
-  const setPlaybackState = (state) => {
-    const playerState = window.YT?.PlayerState;
-    const isPlaying = state === playerState?.PLAYING;
-    const isBuffering = state === playerState?.BUFFERING;
-    const hasStarted = isPlaying || isBuffering || state === playerState?.PAUSED;
-
-    vslShell.classList.toggle("is-playing", isPlaying);
-    vslShell.classList.toggle("is-buffering", isBuffering);
-    vslShell.classList.toggle("is-started", hasStarted);
-    vslSurfaceControl.setAttribute("aria-label", isPlaying ? "Pausar vídeo" : "Reproduzir vídeo");
-
-    if (state === playerState?.ENDED) {
-      vslShell.classList.remove("is-playing", "is-buffering");
-      vslProgressBar.style.width = "100%";
-      vslSurfaceControl.setAttribute("aria-label", "Reproduzir vídeo novamente");
-    }
-  };
-
+if (vslShell && vslVideo && vslSurfaceControl && vslProgressBar) {
   const updateSmartProgress = () => {
-    if (!youtubePlayer?.getDuration) return;
-
-    const duration = youtubePlayer.getDuration();
-    const currentTime = youtubePlayer.getCurrentTime();
+    const { duration, currentTime } = vslVideo;
 
     if (!duration || !Number.isFinite(duration) || !Number.isFinite(currentTime)) return;
 
@@ -225,85 +199,48 @@ if (vslShell && vslSurfaceControl && vslProgressBar) {
     vslProgressBar.style.width = `${displayProgress * 100}%`;
   };
 
-  const startProgressUpdates = () => {
-    window.clearInterval(progressTimer);
-    progressTimer = window.setInterval(updateSmartProgress, 250);
+  const syncVideoState = () => {
+    const isPlaying = !vslVideo.paused && !vslVideo.ended;
+    vslShell.classList.toggle("is-playing", isPlaying);
+    vslShell.classList.toggle("is-started", vslVideo.currentTime > 0 || isPlaying);
+    vslSurfaceControl.setAttribute("aria-label", isPlaying ? "Pausar vídeo" : "Reproduzir vídeo");
   };
 
-  const createYoutubePlayer = () => {
-    if (!window.YT?.Player || youtubePlayer) return;
-
-    youtubePlayer = new window.YT.Player("vsl-youtube-player", {
-      videoId: youtubeVideoId,
-      width: "100%",
-      height: "100%",
-      host: "https://www.youtube-nocookie.com",
-      playerVars: {
-        autoplay: 0,
-        cc_load_policy: 0,
-        controls: 0,
-        disablekb: 1,
-        enablejsapi: 1,
-        fs: 0,
-        iv_load_policy: 3,
-        modestbranding: 1,
-        playsinline: 1,
-        rel: 0,
-        showinfo: 0
-      },
-      events: {
-        onReady: () => {
-          isPlayerReady = true;
-          youtubePlayer.setVolume(100);
-          startProgressUpdates();
-
-          if (shouldPlayWhenReady) {
-            youtubePlayer.playVideo();
-          }
-        },
-        onStateChange: (event) => {
-          setPlaybackState(event.data);
-          updateSmartProgress();
-        },
-        onError: () => {
-          vslShell.classList.remove("is-buffering", "is-playing");
-          vslSurfaceControl.setAttribute("aria-label", "Não foi possível reproduzir. Tentar novamente");
-        }
-      }
-    });
-  };
-
-  window.onYouTubeIframeAPIReady = createYoutubePlayer;
-
-  if (window.YT?.Player) {
-    createYoutubePlayer();
-  } else {
-    const youtubeApiScript = document.createElement("script");
-    youtubeApiScript.src = "https://www.youtube.com/iframe_api";
-    youtubeApiScript.async = true;
-    document.head.appendChild(youtubeApiScript);
-  }
-
-  vslSurfaceControl.addEventListener("click", () => {
-    if (!isPlayerReady) {
-      shouldPlayWhenReady = true;
-      vslShell.classList.add("is-started", "is-buffering");
+  vslSurfaceControl.addEventListener("click", async () => {
+    if (!vslVideo.paused && !vslVideo.ended) {
+      vslVideo.pause();
       return;
     }
 
-    const state = youtubePlayer.getPlayerState();
+    if (vslVideo.ended) {
+      vslVideo.currentTime = 0;
+      vslProgressBar.style.width = "0%";
+    }
 
-    if (state === window.YT.PlayerState.PLAYING) {
-      youtubePlayer.pauseVideo();
-    } else {
-      if (state === window.YT.PlayerState.ENDED) {
-        youtubePlayer.seekTo(0, true);
-        vslProgressBar.style.width = "0%";
-      }
-
-      youtubePlayer.playVideo();
+    try {
+      await vslVideo.play();
+    } catch {
+      vslSurfaceControl.setAttribute("aria-label", "Não foi possível reproduzir. Tentar novamente");
     }
   });
+
+  vslVideo.addEventListener("play", syncVideoState);
+  vslVideo.addEventListener("pause", syncVideoState);
+  vslVideo.addEventListener("playing", () => {
+    vslShell.classList.remove("is-buffering");
+    syncVideoState();
+  });
+  vslVideo.addEventListener("waiting", () => {
+    if (!vslVideo.paused) vslShell.classList.add("is-buffering");
+  });
+  vslVideo.addEventListener("canplay", () => vslShell.classList.remove("is-buffering"));
+  vslVideo.addEventListener("timeupdate", updateSmartProgress);
+  vslVideo.addEventListener("ended", () => {
+    vslShell.classList.remove("is-playing", "is-buffering");
+    vslProgressBar.style.width = "100%";
+    vslSurfaceControl.setAttribute("aria-label", "Reproduzir vídeo novamente");
+  });
+  vslVideo.addEventListener("contextmenu", (event) => event.preventDefault());
 
   const syncFullscreenState = () => {
     const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement;

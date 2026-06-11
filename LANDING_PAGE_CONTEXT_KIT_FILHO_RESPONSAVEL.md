@@ -366,11 +366,10 @@ https://youtube.com/shorts/O7LB8TmSFgc
 
 Implementação:
 
-- YouTube IFrame API;
-- host `youtube-nocookie.com`;
-- controles nativos ocultos;
-- teclado do player desativado;
-- interação direta com o iframe bloqueada;
+- arquivo MP4 local `assets/vsl-filho-responsavel.mp4`;
+- resolução vertical `1080x1920`;
+- elemento HTML5 `<video>` sem controles nativos;
+- interação direta com o elemento de vídeo bloqueada;
 - interface própria com play/pausa e tela cheia;
 - tela cheia aplicada ao contêiner customizado;
 - fallback de pseudo-fullscreen para Safari/iPhone;
@@ -378,6 +377,7 @@ Implementação:
 - vídeo e capa preservados sem corte;
 - barra de progresso visual não interativa;
 - nenhuma opção de velocidade ou busca manual.
+- nenhuma interface, título, canal, descrição ou marca d'água de Shorts do YouTube.
 
 A barra inteligente usa o progresso real do vídeo e a fórmula:
 
@@ -387,9 +387,7 @@ progresso exibido = progresso real + 0,25 × seno(π × progresso real)
 
 Isso faz a barra avançar mais rapidamente no início e desacelerar no final. Ela é limitada a `99,5%` enquanto o vídeo não termina e só chega a `100%` no estado `ENDED`.
 
-Limitação da plataforma:
-
-O YouTube controla internamente o conteúdo do iframe e pode alterar comportamentos futuros. A interface customizada bloqueia os controles e overlays comuns observados atualmente, mas não deve ser descrita como um player VTurb real.
+O arquivo local foi adotado porque o iframe do YouTube Shorts injetava canal, título e controles internos que não podiam ser removidos com garantia por CSS externo. A implementação atual não depende mais do player do YouTube.
 
 ## 12. Topo e navegação
 
